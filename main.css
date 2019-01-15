@@ -1,0 +1,19 @@
+.container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-content: center;
+}
+
+#source {
+    width: 500px;
+    height: auto;
+    margin: auto;
+}
+
+#render {
+    background-color: black;
+    width: 500px;
+    height: auto;
+    margin: auto;
+}
