@@ -23,7 +23,7 @@ async function extractFrames(videoElement, canvasPipe) {
                     duration = videoElement.duration;
 
                     //only grab frames 30fps and lower
-                    setTimeout(capture, 1000 / 10);
+                    setTimeout(capture, 1000 / 30);
                 }
 
                 capture();
@@ -55,11 +55,11 @@ function increaseFrame(frames, videoElement, factor) {
     for (let i = 1; i < frames.length; i += 1) {
         let opticalFlowFrame = [];
         opticalFlowFrame.push(frames[i - 1].data);
-        for (let f = 1; f <= factor; f++) {
+        for (let f = 1; f <= factor-1; f++) {
             let smoothFrame = [];
             frames[i].data.forEach((p1, pixelIndex) => {
                     let dist = Math.abs(frames[i - 1].data[pixelIndex] - p1);
-                    smoothFrame.push((f / factor) * dist + frames[i - 1].data[pixelIndex]);
+                    smoothFrame.push((f / factor-1 * dist) + frames[i - 1].data[pixelIndex]);
             });
             opticalFlowFrame.push(smoothFrame);
         }
