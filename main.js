@@ -1,3 +1,6 @@
+//gpu acceleration
+const gpu = new GPU();
+
 async function extractFrames(videoElement, canvasPipe) {
     let extracted = [];
     let duration = 0;
@@ -78,10 +81,42 @@ function increaseFrame(frames, videoElement, factor) {
     };
 }
 
-/*
-function increaseFrameGPU = gpu.createKernel(function (frames, videoElement) {
+const buildOpticFlowFrame = function (frame1, frame2, factor) {
+    let oFF = [2];
+    for(let pixelIndex = 0; pixelIndex < frame1.data.length; pixelIndex++) {
+        oFF[pixelIndex](frame1.data[pixelIndex]);
+        for (let f = 1; f <= factor-1; f++) { 
+            oFF[pixelIndex]((0.5*Math.sin(f / factor-1 * 0.25) * Math.abs(frame1[i].data[pixelIndex], frame2[i].data[pixelIndex]) + 0.5 + frame1[i].data[pixelIndex]));        
+        }
+    }
+    return oFF;
+}
 
-});*/
+const increaseFrameGPU = function () {
+    let increased = [];
+    for (let i = 1; i < this.constant.frames.length; i += 1) {
+        let opticalFlowFrame = [];
+        //opticalFlowFrame.push(this.constant.frames[i - 1].data);
+        for (let f = 1; f <= factor-1; f++) {
+            let smoothFrame = [];
+            for(let pixelIndex = 0; pixelIndex < this.constant.frames[i].data.length; pixelIndex++) {
+                    let dist = Math.abs(this.constant.frames[i - 1].data[pixelIndex] - this.constant.frames[i].data[pixelIndex]);
+                    console.log(pixelIndex);
+                    //linear
+                    //smoothFrame.push((f / factor-1 * dist) + frames[i - 1].data[pixelIndex]);
+
+                    //sin
+                    smoothFrame.push((0.5*Math.sin(f / factor-1 * 0.25) * dist) + 0.5 + this.constant.frames[i - 1].data[pixelIndex]);
+            }
+            opticalFlowFrame.push(smoothFrame);
+        }
+        //opticalFlowFrame.push(frames[i].data);
+        for(let off = 0; off < opticalFlowFrame.length; off++) {
+            increased.push(new ImageData(new Uint8ClampedArray(opticalFlowFrame[off]), videoElement.width, videoElement.height))
+        }
+    }
+    return increased;  
+}
 
 async function playRender(canvasElement, frames, fps) {
     function playFrame(frames, index) {
@@ -114,17 +149,25 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.log(`Extracted FPS: ${extracted.fps}, Number of Frames: ${extracted.frames.length}, Duration: ${extracted.duration} s`);
     // });
 
-    let doubleFPS = increaseFrame(extracted.frames, videoElement, 2)
+
+
+    let genRender = (new GPU({mode: "gpu"}))
+    .createKernel(buildOpticFlowFrame)
+    .setOutput([extracted.frames.length * 2]);
+
+    let test = genRender(extracted.frames[0], extracted.frames[1], 2);
+    console.log(test);
     //   .then(function (doubleFPS) {
     //print benchmarks
-    document.querySelector('#render-benchmarks').innerHTML = `Render FPS: ${doubleFPS.frames.length/extracted.duration}, Number of Frames: ${doubleFPS.frames.length}`;
-    console.log(`Render FPS: ${doubleFPS.frames.length/extracted.duration}, Number of Frames: ${doubleFPS.frames.length}`);
+    //document.querySelector('#render-benchmarks').innerHTML = `Render FPS: ${doubleFPS.frames.length/extracted.duration}, Number of Frames: ${doubleFPS.frames.length}`;
+    //console.log(`Render FPS: ${doubleFPS.frames.length/extracted.duration}, Number of Frames: ${doubleFPS.frames.length}`);
 
     //   });
 
     //play render and original side by side
-    await Promise.all([async function () {
+    /*await Promise.all([async function () {
         videoElement.playbackRate = 1;
         await videoElement.play()
     }, playRender(renderElement, doubleFPS.frames, (doubleFPS.frames.length / extracted.duration)), playRender(extractElement, extracted.frames, extracted.fps)]);
+    */
 });
