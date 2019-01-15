@@ -10,10 +10,14 @@
 </head>
 
 <body>
-    <div class="container">
-            <video id="source" src="media/opm.mp4" controls></video>
-            <canvas id="render"></canvas>
+    <div class="hidden">
+            <canvas id="pipe" width=640 height=360></canvas>
     </div>
+    <div class="container">
+            <video id="source" src="media/opm.mp4"  width=640 height=360 controls></video>
+            <canvas id="render" width=640 height=360></canvas>
+    </div>
+    
 
     <script src="main.js"></script>
 </body>

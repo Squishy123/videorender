@@ -1,19 +1,24 @@
 .container {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
-    align-content: center;
+}
+
+.hidden {
+    display: none;
+    width: 640px;
+    height: 360px;
 }
 
 #source {
-    width: 500px;
-    height: auto;
     margin: auto;
+    width: 640px;
+    height: 360px;
 }
 
 #render {
     background-color: black;
-    width: 500px;
-    height: auto;
     margin: auto;
+    width: 640px;
+    height: 360px;
 }
