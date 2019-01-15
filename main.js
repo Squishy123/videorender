@@ -3,7 +3,7 @@ async function extractFrames(videoElement, canvasPipe) {
     let duration = 0;
 
     //increase playback rate to 3 times the rate
-    videoElement.playbackRate = 2;
+    videoElement.playbackRate = 1.5;
 
     try {
         //play video
@@ -23,7 +23,7 @@ async function extractFrames(videoElement, canvasPipe) {
                     duration = videoElement.duration;
 
                     //only grab frames 30fps and lower
-                    setTimeout(capture, 1000 / 10);
+                    setTimeout(capture, 1000 / 60);
                 }
 
                 capture();
@@ -64,7 +64,7 @@ function increaseFrame(frames, videoElement, factor) {
                     //smoothFrame.push((f / factor-1 * dist) + frames[i - 1].data[pixelIndex]);
 
                     //sin
-                    smoothFrame.push((0.5*Math.sin(f / factor-1) * dist) + 0.5 + frames[i - 1].data[pixelIndex]);
+                    smoothFrame.push((0.5*Math.sin(f / factor-1 * 0.25) * dist) + 0.5 + frames[i - 1].data[pixelIndex]);
             });
             opticalFlowFrame.push(smoothFrame);
         }
