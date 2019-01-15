@@ -11,13 +11,32 @@
 
 <body>
     <div class="hidden">
-            <canvas id="pipe" width=640 height=360></canvas>
+        <canvas id="pipe" width=640 height=360></canvas>
     </div>
     <div class="container">
-            <video id="source" src="media/opm.mp4"  width=640 height=360 controls></video>
+        <div class="row">
+            <div class="benchmarks">
+                <h1>Original Capture</h1>
+                <p id="src-benchmarks"></p>
+            </div>
+            <video id="source" src="media/opm.mp4" width=640 height=360 controls></video>
+        </div>
+        <div class="row">
+            <div class="benchmarks">
+                <h1>Extracted Frames</h1>
+                <p id="extract-benchmarks"></p>
+            </div>
+            <canvas id="extract" width=640 height=360></canvas>
+        </div>
+        <div class="row">
+            <div class="benchmarks">
+                <h1>Render with Optical Flow</h1>
+                <p id="render-benchmarks"></p>
+            </div>
             <canvas id="render" width=640 height=360></canvas>
+        </div>
     </div>
-    
+
 
     <script src="main.js"></script>
 </body>

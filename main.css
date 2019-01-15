@@ -4,6 +4,20 @@
     justify-content: center;
 }
 
+.row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding: 10px;
+}
+
+.benchmarks {
+    flex-basis: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
 .hidden {
     display: none;
     width: 640px;
@@ -17,6 +31,13 @@
 }
 
 #render {
+    background-color: black;
+    margin: auto;
+    width: 640px;
+    height: 360px;
+}
+
+#extract {
     background-color: black;
     margin: auto;
     width: 640px;
