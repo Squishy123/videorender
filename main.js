@@ -82,15 +82,14 @@ function increaseFrame(frames, videoElement, factor) {
 }
 
 const buildOpticFlowFrame = function (frame1, frame2, factor) {
-    /*let oFF = [1];
     //for(let pixelIndex = 0; pixelIndex < frame1.length; pixelIndex++) {
-        oFF.push(frame1[pixelIndex]);
-       for (let f = 1; f <= factor-1; f++) { 
-            oFF.push((0.5*Math.sin(f / factor-1 * 0.25) * Math.abs(frame1[this.thread.x], frame2[this.thread.x]) + 0.5 + frame1[this.thread.x]));        
-        }
-   // }
-    return oFF;*/
-    return Math.abs(frame1[this.thread.y] - frame2[this.thread.y])
+        let comp = 0;
+        //oFF[this.thread.x] = (frame1[this.thread.x]);
+       //for (let f = 1; f <= factor-1; f++) { 
+        comp = ((0.5*Math.sin(1 / factor-1 * 0.25) * Math.abs(frame1[this.thread.x] - frame2[this.thread.y + 1]) + 0.5 + frame1[this.thread.x]));        
+        //}
+    return comp;
+    //return Math.abs(frame1[this.thread.y] - frame2[this.thread.y])
 }
 
 const increaseFrameGPU = function () {
@@ -154,9 +153,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.log(extracted.frames[0]);
     let genRender = (new GPU({mode: "gpu"}))
     .createKernel(buildOpticFlowFrame)
-    .setOutput([extracted.frames.length * 2]);
+    .setOutput([extracted.frames.length * 2, extracted.frames.length * 2]);
 
-    let fill = new Array(extracted.frames[0].data.length);
+    let fill = new Array(5);
 
     let test = genRender(extracted.frames[0].data, extracted.frames[1].data, 2);
     console.log(test);
