@@ -3,7 +3,7 @@ async function extractFrames(videoElement, canvasPipe) {
     let duration = 0;
 
     //increase playback rate to 3 times the rate
-    videoElement.playbackRate = 1.5;
+    videoElement.playbackRate = 2;
 
     try {
         //play video
@@ -23,7 +23,7 @@ async function extractFrames(videoElement, canvasPipe) {
                     duration = videoElement.duration;
 
                     //only grab frames 30fps and lower
-                    setTimeout(capture, 1000 / 30);
+                    setTimeout(capture, 1000 / 10);
                 }
 
                 capture();
@@ -59,7 +59,12 @@ function increaseFrame(frames, videoElement, factor) {
             let smoothFrame = [];
             frames[i].data.forEach((p1, pixelIndex) => {
                     let dist = Math.abs(frames[i - 1].data[pixelIndex] - p1);
-                    smoothFrame.push((f / factor-1 * dist) + frames[i - 1].data[pixelIndex]);
+
+                    //linear
+                    //smoothFrame.push((f / factor-1 * dist) + frames[i - 1].data[pixelIndex]);
+
+                    //sin
+                    smoothFrame.push((0.5*Math.sin(f / factor-1) * dist) + 0.5 + frames[i - 1].data[pixelIndex]);
             });
             opticalFlowFrame.push(smoothFrame);
         }
@@ -109,7 +114,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.log(`Extracted FPS: ${extracted.fps}, Number of Frames: ${extracted.frames.length}, Duration: ${extracted.duration} s`);
     // });
 
-    let doubleFPS = increaseFrame(extracted.frames, videoElement, 4)
+    let doubleFPS = increaseFrame(extracted.frames, videoElement, 2)
     //   .then(function (doubleFPS) {
     //print benchmarks
     document.querySelector('#render-benchmarks').innerHTML = `Render FPS: ${doubleFPS.frames.length/extracted.duration}, Number of Frames: ${doubleFPS.frames.length}`;
