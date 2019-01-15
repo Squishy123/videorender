@@ -22,7 +22,8 @@ async function extractFrames(videoElement, canvasPipe) {
 
                     duration = videoElement.duration;
 
-                    setTimeout(capture, 1000/60);
+                    //only grab frames 30fps and lower
+                    setTimeout(capture, 1000/30);
                 }
 
                 capture();
@@ -47,7 +48,7 @@ function captureFrame(videoElement, canvasPipe) {
 
 function doubleFrame(frames, videoElement) {
     let double = [];
-    for(let i = 1; i < frames.length; i+=2) {
+    for(let i = 1; i < frames.length; i+=1) {
         let opticalFlowFrame = [];
         opticalFlowFrame.push(frames[i-1].data);
         let smoothFrame = [];
@@ -55,7 +56,7 @@ function doubleFrame(frames, videoElement) {
             smoothFrame.push((frames[i-1].data[pixelIndex] + p1)/2);
         });
         opticalFlowFrame.push(smoothFrame);
-        opticalFlowFrame.push(frames[i].data);
+        //opticalFlowFrame.push(frames[i].data);
         opticalFlowFrame.map((frame) => {
             double.push(new ImageData(new Uint8ClampedArray(frame), videoElement.width, videoElement.height))
         });
@@ -86,6 +87,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     let doubleFPS = doubleFrame(extracted.frames, videoElement);
     console.log(`Render FPS: ${doubleFPS.frames.length/extracted.duration}, Number of Frames: ${doubleFPS.frames.length}`);
 
-    playRender(renderElement, doubleFPS.frames, doubleFPS.frames.length/extracted.duration);
+    playRender(renderElement, doubleFPS.frames, (doubleFPS.frames.length/extracted.duration) + 5);
 
 });
